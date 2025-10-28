@@ -53,6 +53,30 @@
             <version>${org.projectlombok.version}</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- JUnit Jupiter API (pour @Test) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>6.0.0</version>  <!-- dernière version stable -->
+            <scope>test</scope>
+        </dependency>
+
+        <!-- JUnit Jupiter Engine (pour exécuter les tests) -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>6.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- AssertJ (pour assertThat) -->
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>3.27.6</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
