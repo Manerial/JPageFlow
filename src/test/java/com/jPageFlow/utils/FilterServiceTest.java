@@ -86,6 +86,19 @@ public class FilterServiceTest {
     }
 
     @Test
+    public void testFilterWithOffset() {
+        List<TestRecord1> testRecord1s = createListRecord1("value", 10);
+
+        FilterDto filterDto = new FilterDto();
+        filterDto.setOffset(5);
+        filterDto.setSize(5);
+        Page<TestRecord1> page = FilterService.filterData(testRecord1s, filterDto, (a) -> a);
+        assertThat(page.getTotalElements()).isEqualTo(10);
+        assertThat(page.getContent().size()).isEqualTo(5);
+        assertThat(page.getContent().getFirst().value()).isEqualTo("value5");
+    }
+
+    @Test
     public void testFilterWithEverything() {
         List<TestRecord1> testRecord1s = createListRecord1("value", 100);
         testRecord1s.add(new TestRecord1("specialvalue1"));
