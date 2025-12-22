@@ -1,13 +1,12 @@
 package com.jPageFlow.utils;
 
-import lombok.Data;
+import lombok.*;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Data
 public class FilterDto {
-    private Integer page = 0; // Le numéro de page
+    private Integer page; // Le numéro de page
     private int offset; // A défaut du numéro de page, page = offset / size
     private int size = 10; // La taille de la page
     private String sort; // Le champ et l'ordre de tri (ex: "name,asc")'
