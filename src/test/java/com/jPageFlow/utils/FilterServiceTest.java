@@ -134,8 +134,8 @@ public class FilterServiceTest {
         filterDto.setSize(5);
         filterDto.setFilterParams(Map.of("record1.noField", "value1"));
         Page<TestRecord2> page = FilterService.filterData(testRecord2s, filterDto, (a) -> a);
-        assertThat(page.getTotalElements()).isEqualTo(1);
-        assertThat(page.getContent().size()).isEqualTo(1);
+        assertThat(page.getTotalElements()).isEqualTo(0);
+        assertThat(page.getContent().size()).isEqualTo(0);
     }
 
     @Test

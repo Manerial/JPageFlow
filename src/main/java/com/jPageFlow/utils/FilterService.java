@@ -70,14 +70,25 @@ public class FilterService {
 
     private static boolean checkValuesForFieldReccursively(String key, String value, Object object) throws IllegalAccessException {
         if (value.startsWith("[") && value.endsWith("]")) {
-            value = value.substring(1, value.length() - 1);
-            String[] filterValues = value.split(",");
-            for (String subFilterValue : filterValues) {
-                if (!checkFieldReccursively(key, subFilterValue, object)) {
-                    return false;
+            value = value.substring(1, value.length() - 1); // Les valeurs du tableau "0, 1"
+            String[] filterValues = value.split(","); // Les valeurs splittées ["0", "1"]
+            if (object instanceof Collection<?>) {
+                // Si object est une collection, on veut que toutes les valeurs du filtre match notre objet
+                for (String subFilterValue : filterValues) {
+                    if (!checkFieldReccursively(key, subFilterValue, object)) {
+                        return false;
+                    }
                 }
+                return true;
+            } else {
+                // Sinon, on veut que la valeur de l'objet match une des valeurs du filtre
+                for (String subFilterValue : filterValues) {
+                    if (checkFieldReccursively(key, subFilterValue, object)) {
+                        return true;
+                    }
+                }
+                return false;
             }
-            return true;
         } else {
             return checkFieldReccursively(key, value, object);
         }
