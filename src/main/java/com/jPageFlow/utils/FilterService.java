@@ -119,7 +119,11 @@ public class FilterService {
     private static boolean fieldContains(Object fieldValue, String filterValue) {
         String fieldValueLC = fieldValue.toString().toLowerCase().trim();
         String filterValueLC = filterValue.toLowerCase().trim();
-        return fieldValueLC.contains(filterValueLC);
+        if (fieldValue instanceof Long || fieldValue instanceof Integer || fieldValue instanceof Double || fieldValue instanceof Boolean) {
+            return fieldValueLC.equals(filterValueLC);
+        } else {
+            return fieldValueLC.contains(filterValueLC);
+        }
     }
 
     private static <T> int compare(T o1, T o2, String fieldName) {
