@@ -1,14 +1,11 @@
 package com.jPageFlow.utils;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.data.domain.Page;
+import org.junit.jupiter.api.*;
+import org.springframework.data.domain.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.*;
 
 public class FilterServiceTest {
     record TestRecord1(String value) {
@@ -124,6 +121,18 @@ public class FilterServiceTest {
         filterDto.setPage(0);
         filterDto.setSize(5);
         filterDto.setFilterParams(Map.of("record1.value", "value1"));
+        Page<TestRecord2> page = FilterService.filterData(testRecord2s, filterDto, (a) -> a);
+        assertThat(page.getTotalElements()).isEqualTo(1);
+        assertThat(page.getContent().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void testFilterWithSubValues_ko() {
+        List<TestRecord2> testRecord2s = createListRecord2(10, 10);
+        FilterDto filterDto = new FilterDto();
+        filterDto.setPage(0);
+        filterDto.setSize(5);
+        filterDto.setFilterParams(Map.of("record1.noField", "value1"));
         Page<TestRecord2> page = FilterService.filterData(testRecord2s, filterDto, (a) -> a);
         assertThat(page.getTotalElements()).isEqualTo(1);
         assertThat(page.getContent().size()).isEqualTo(1);

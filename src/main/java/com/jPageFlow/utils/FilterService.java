@@ -1,15 +1,12 @@
 package com.jPageFlow.utils;
 
-import org.springframework.beans.support.PagedListHolder;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.beans.support.*;
+import org.springframework.data.domain.*;
 
-import java.lang.reflect.Field;
+import java.lang.reflect.*;
 import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Stream;
+import java.util.function.*;
+import java.util.stream.*;
 
 public class FilterService {
     public static final String FILTER_DESCRIPTION = """
@@ -153,12 +150,8 @@ public class FilterService {
     private static Field getField(String fieldName, Class<?> clazz) {
         try {
             return clazz.getDeclaredField(fieldName);
-        } catch (NoSuchFieldException e1) {
-            try {
-                return clazz.getSuperclass().getDeclaredField(fieldName);
-            } catch (NoSuchFieldException e2) {
-                throw new RuntimeException(e2);
-            }
+        } catch (NoSuchFieldException e) {
+            return getField(fieldName, clazz.getSuperclass());
         }
     }
 
