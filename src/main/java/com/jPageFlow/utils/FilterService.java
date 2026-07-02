@@ -4,6 +4,7 @@ import org.springframework.beans.support.*;
 import org.springframework.data.domain.*;
 
 import java.lang.reflect.*;
+import java.math.*;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
@@ -138,6 +139,8 @@ public class FilterService {
                 return Double.compare((Double) valO1, (Double) valO2);
             } else if (valO1 instanceof Boolean) {
                 return Boolean.compare((Boolean) valO1, (Boolean) valO2);
+            } else if (valO1 instanceof BigInteger) {
+                return ((BigInteger) valO1).compareTo((BigInteger) valO2);
             } else if (valO1 == null || valO2 == null) {
                 return (valO1 == null ? -1 : 0) + (valO2 == null ? 1 : 0);
             } else {
