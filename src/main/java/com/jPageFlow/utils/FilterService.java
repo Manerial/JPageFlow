@@ -4,7 +4,6 @@ import org.springframework.beans.support.*;
 import org.springframework.data.domain.*;
 
 import java.lang.reflect.*;
-import java.math.*;
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
@@ -118,9 +117,16 @@ public class FilterService {
     }
 
     private static boolean fieldContains(Object fieldValue, String filterValue) {
+        if (fieldValue instanceof Collection<?> collection) {
+            return collection.stream().anyMatch(element -> fieldContains(element, filterValue));
+        }
+        if (fieldValue instanceof Map<?, ?> map) {
+            return map.values().stream().anyMatch(v -> fieldContains(v, filterValue))
+                    || map.keySet().stream().anyMatch(k -> fieldContains(k, filterValue));
+        }
         String fieldValueLC = fieldValue.toString().toLowerCase().trim();
         String filterValueLC = filterValue.toLowerCase().trim();
-        if (fieldValue instanceof Long || fieldValue instanceof Integer || fieldValue instanceof Double || fieldValue instanceof Boolean) {
+        if (fieldValue instanceof Comparable<?> && !(fieldValue instanceof String)) {
             return fieldValueLC.equals(filterValueLC);
         } else {
             return fieldValueLC.contains(filterValueLC);
@@ -131,21 +137,15 @@ public class FilterService {
         try {
             Object valO1 = getFieldReccursively(fieldName, o1);
             Object valO2 = getFieldReccursively(fieldName, o2);
-            if (valO1 instanceof Long) {
-                return Long.compare((Long) valO1, (Long) valO2);
-            } else if (valO1 instanceof Integer) {
-                return Integer.compare((Integer) valO1, (Integer) valO2);
-            } else if (valO1 instanceof Double) {
-                return Double.compare((Double) valO1, (Double) valO2);
-            } else if (valO1 instanceof Boolean) {
-                return Boolean.compare((Boolean) valO1, (Boolean) valO2);
-            } else if (valO1 instanceof BigInteger) {
-                return ((BigInteger) valO1).compareTo((BigInteger) valO2);
-            } else if (valO1 == null || valO2 == null) {
+            if (valO1 == null || valO2 == null) {
                 return (valO1 == null ? -1 : 0) + (valO2 == null ? 1 : 0);
-            } else {
-                return valO1.toString().compareTo(valO2.toString());
             }
+            if (valO1 instanceof Comparable<?> comparable) {
+                @SuppressWarnings("unchecked")
+                Comparable<Object> c = (Comparable<Object>) comparable;
+                return c.compareTo(valO2);
+            }
+            return valO1.toString().compareTo(valO2.toString());
         } catch (IllegalAccessException e) {
             throw new RuntimeException(e);
         }
